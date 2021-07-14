@@ -3,6 +3,29 @@
 
 <?php
 
+function addition($var1, $var2){
+    return $var1 + $var2;
+}
+
+echo addition(4, 5);
+
+echo "<p>";
+
+function convert($var1){
+    return $var1 * 60;
+}
+echo convert(4);
+
+echo "<p>";
+
+function getFirstValue($num1, $num2, $num3){
+    $var1 = array($num1, $num2, $num3);
+    return $var1[0];
+}
+
+echo getFirstValue(1,2, 3);
+
+echo "<p>";
 echo "Hello world<p>";
 
 $carColor = "red";
@@ -62,6 +85,8 @@ echo $myCar -> message();
 echo str_replace("world", "Dolly", "Hello world!<p>");
 
 echo(rand(10, 100));
+
+echo "<p>";
 
 define("cars", [
     "Alfa Romeo<p>",
