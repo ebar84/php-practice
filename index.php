@@ -129,5 +129,11 @@ if ($t < "10") {
 
 ?>
 
+<?php
+$link = 'https://www.google.com';
+$title = 'Google';
+?>
+<a href="<?php print $link?>"><?php print $title;?></a>
+
 </body>
 </html>
