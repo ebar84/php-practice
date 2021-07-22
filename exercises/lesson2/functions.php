@@ -9,13 +9,36 @@ function main() {
 
   echo "Welcome to the Super Bank Program. Please log in to continue.\n";
   login();
+  menu();
 }
 
 function menu() {
-  // do-while
+  do {
+      echo "1.) Withdraw\n
+            2.) Deposit\n
+            3.) Check Balance\n
+            4.) Change Password\n
+            5.) Log out\n";
+      $option = readline("Choose an option>>");
+      if ($option === "1")
+          withdraw();
+      elseif ($option === "2")
+          deposit();
+      elseif ($option === "3")
+          check_balance();
+      elseif ($option === "4")
+          change_password();
+      elseif ($option === "5")
+          logout();
+      else {
+          echo "Invalid Selection\n";
+          $option = readline("Choose an option>>");
+      }
+
+  }while ($option == NULL);
 }
 
-function get_balance() {
+function change_password() {
   // Should open the file and retrieve the users balance
 }
 
