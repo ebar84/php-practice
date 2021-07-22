@@ -1,0 +1,7 @@
+{
+  "accounts":[
+    {"username":"ebarnes", "password":"password", "balance": 100},
+    {"username":"cpeppers", "password":"password123", "balance": 1000},
+    {"username":"sstorm", "password":"123password", "balance": 90}
+  ]
+}
