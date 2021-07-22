@@ -49,7 +49,8 @@ function login() {
       // if username matches and password matches
         if ($content['username'] == $username && $content['password'] == $password){
             $logged_in = TRUE;
-            echo "You have succesfully logged in.";
+            $_SESSION['account'] = $content;
+            echo "You have successfully logged in.";
         } else {
             echo "Unable to Login";
         }
@@ -66,12 +67,11 @@ function logout() {
 
 function open_file() {
   // file get contents
-    $accounts = file_get_contents('bank_accounts.json');
+  $accounts = file_get_contents('bank_accounts.json');
   // json_decode($contents, TRUE); Make sure to use TRUE in second
   // parameters so that you get an array instead of an object
-    $content = json_decode($accounts, TRUE);
-    return $content;
-  // set the sessions variable to the accounts $_SESSION['accounts'] =
+  $content = json_decode($accounts, TRUE);
+  return $content;
 }
 
 function write_file($content) {
