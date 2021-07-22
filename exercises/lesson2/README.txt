@@ -17,18 +17,20 @@ password, and bank account.
 1.) Withdraw
 2.) Deposit
 3.) Check Balance
-4.) Log out
+4.) Change Password
+5.) Log out
 
 If the user does not choose a valid command it should tell them that their command did not work and ask again. Hint: Use a do loop to accomplish this.
 - For answer 1 ask the user how much money they wish to withdrawal. They cannot withdraw more than the money they have in the bank. When they withdraw it should subtract that from a variable that is holding that value in real time. After they withdraw it should tell them what action they did and bring them back to the main screen where you can see their balance again.
-  Hint: For this you could use a global variable of some sort?
+  Hint: For this you could use a global variable of some sort? This should update the json file with the new balance.
 - Deposit should do what you would expect a deposit to do. Asking for how much to deposit and increment. Should echo back what they did and back to the main screen where you can see the balance.
-- The check balance should just echo their balance and send them back to the main menu.
+- The check balance should just echo their balance and send them back to the main menu. This should update the json file with the new balance.
+- The change password should prompt the user for a new password and then save the json file.
 - Logging out will ask them if they are sure they want to log out and then tell them goodbye to exit the program.
 
 Other considerations:
 
-- Use functions when possible. You shouldnt have a big long program of only logic. In the functions.php file there is
+- Use functions when possible. You shouldn't have a big long program of only logic. In the functions.php file there is
 a list of functions stubbed out.
 
 Tasks:
@@ -39,4 +41,5 @@ Tasks:
 - Withdraw function
 - Deposit function
 - Check balance function
+- Create a change password function.
 - Log out function.
