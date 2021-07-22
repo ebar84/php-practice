@@ -7,7 +7,7 @@ function session_begin() {
 function main() {
   session_begin();
 
-  echo "Whats your name?\n";
+  echo "Welcome to the Super Bank Program. Please log in to continue.\n";
   login();
 }
 
@@ -46,8 +46,13 @@ function login() {
 
     // loop through the array
     foreach($contents['accounts'] as $content) {
-      var_dump($content);
       // if username matches and password matches
+        if ($content['username'] == $username && $content['password'] == $password){
+            $logged_in = TRUE;
+            echo "You have succesfully logged in.";
+        } else {
+            echo "Unable to Login";
+        }
       // change logged_in to true
     }
 
@@ -61,8 +66,11 @@ function logout() {
 
 function open_file() {
   // file get contents
+    $accounts = file_get_contents('bank_accounts.json');
   // json_decode($contents, TRUE); Make sure to use TRUE in second
   // parameters so that you get an array instead of an object
+    $content = json_decode($accounts, TRUE);
+    return $content;
   // set the sessions variable to the accounts $_SESSION['accounts'] =
 }
 
