@@ -1,10 +1,10 @@
 <?php
 
 function main() {
-  echo "Whats your name? ";
-  $get = trim(fgets(STDIN));
+  echo "Whats your name?\n";
+  $answer1 = readline(">>");
 
-  var_dump($get);
+  var_dump($answer1);
 }
 
 function check_password($username, $password) {
