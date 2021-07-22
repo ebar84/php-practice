@@ -51,23 +51,29 @@ function check_balance() {
 }
 
 function withdraw() {
+  $balance = ($_SESSION['account']['balance']);
 
-  // Asks for the amount of money
+  if ($balance <= 0) {
+    echo "You ain't got no money to withdraw you broke ass.";
+  }
+  else {
+    $withdraw_complete = FALSE;
+
     do {
-        $balance = ($_SESSION['account']['balance']);
-        $withdraw_amount = readline("Amount to Withdraw>>");
-        // Then subtracts that number and does a set_balance
-        $leftover = ($balance - $withdraw_amount);
+      $balance = ($_SESSION['account']['balance']);
+      $withdraw_amount = readline("Amount to Withdraw>>");
 
-        if ($leftover >= 1) {
-            echo "You're money is being dispensed. You're current balance is " . $leftover . "!\n";
-            $_SESSION['account']['balance'] = $leftover;
-            menu();
-        } else {
-            echo "You're cannot withdraw " . $withdraw_amount . ".\n You're current balance is " . $balance . ".\n";
-            menu();
-        }
-    } while ($withdraw_amount <= $balance);
+      if (is_numeric($withdraw_amount) && $withdraw_amount >= 1) {
+        $_SESSION['account']['balance'] -= $withdraw_amount;
+        echo "You're money is being dispensed. You're current balance is " . $_SESSION['account']['balance'] . "!\n";
+        $withdraw_complete = TRUE;
+      } else {
+        echo "You're cannot withdraw " . $withdraw_amount . ".\n You're current balance is " . $balance . ".\n";
+      }
+    } while (!$withdraw_complete);
+  }
+
+  menu();
 }
 
 function deposit() {
