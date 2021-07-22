@@ -1,18 +1,14 @@
 <?php
 
 function session_begin() {
-  // You can use $_SESSION['accounts'] anywhere in the program.
-  // This will be used when settings values globally instead of passing
-  // around values to functions. This works the same as variables.
-  $_SESSION['accounts'] = [];
+  $_SESSION['account'] = 'test';
 }
 
 function main() {
   session_begin();
 
   echo "Whats your name?\n";
-  $answer1 = readline(">>");
-
+  login();
 }
 
 function menu() {
@@ -40,12 +36,27 @@ function deposit() {
   // Asks for the amount of money, does a set_balance
 }
 
-function logout() {
-  // echos and then exits the program
+function login() {
+  $logged_in = FALSE;
+
+  do {
+    $username = readline("Username>>");
+    $password = readline("Password>>");
+    $contents = open_file();
+
+    // loop through the array
+    foreach($contents['accounts'] as $content) {
+      var_dump($content);
+      // if username matches and password matches
+      // change logged_in to true
+    }
+
+    // comp
+  } while(!$logged_in);
 }
 
-function check_password($username, $password) {
-  // Loop through the array and match user name and password
+function logout() {
+  // echos and then exits the program
 }
 
 function open_file() {
