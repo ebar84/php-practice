@@ -35,7 +35,7 @@ function menu() {
           $option = readline("Choose an option>>");
       }
 
-  }while ($option == NULL);
+  }while ($option != 5);
 }
 
 function change_password() {
@@ -46,18 +46,12 @@ function change_password() {
       $_SESSION['account']['password'] = $new_password;
         $password_changed = TRUE;
   } while(!$password_changed);
-  menu();
-}
-
-function set_balance() {
-  // Should save to a file with the users balance
 }
 
 function check_balance() {
   // Open up the file and display the balanace
     $balance = ($_SESSION['account']['balance']);
     echo "You're balance is currently " . $balance . ".\n";
-    menu();
 }
 
 function withdraw() {
@@ -82,15 +76,13 @@ function withdraw() {
       }
     } while (!$withdraw_complete);
   }
-
-  menu();
 }
 
 function deposit() {
   // Asks for the amount of money, does a set_balance
     $balance = ($_SESSION['account']['balance']);
 
-    if ($balance <= 0) {
+    if ($balance < 0) {
         echo "There is a problem with your account. Speak with representative.";
     }
     else {
@@ -109,9 +101,6 @@ function deposit() {
             }
         } while (!$deposit_complete);
     }
-
-    menu();
-
 }
 
 function login() {
