@@ -2,14 +2,25 @@
 
 function session_begin() {
   $_SESSION['player'] = '';
-  $_SESSION['hero'] = ['Stats' => ['str' => 10, 'dex' => 10, 'con' => 10, 'int' => 10, 'wis' => 10],
-                      ['name' => $_SESSION['name'],
-                        'class' => $_SESSION['class'],
-                        'Inventory' => [],
-                        'Equipped' => ['Weapon' => '', 'Body' => ''],
-                        'Skills' => ['Magic' => '']]];
+}
 
-
+function generate_new_character($name, $class) {
+  $_SESSION['player'] =
+    [
+      'Stats' => [
+        'str' => 10,
+        'dex' => 10,
+        'con' => 10,
+        'int' => 10,
+        'wis' => 10,
+      ],
+      'name' => $name,
+      'class' => $class,
+      'Inventory' => [],
+      'Equipped' => ['Weapon' => '', 'Body' => ''],
+      'Skills' => ['Magic' => ''],
+      'filename' => '',
+    ];
 }
 
 function main() {
@@ -61,34 +72,35 @@ function menu() {
 }
 
 function create_hero() {
-  $_SESSION['name'] = readline("Enter Your Name>>");
-  echo "Your name is " . $_SESSION['name'] . ".\n";
+  $name = readline("Enter Your Name>>");
+  echo "Your name is " . $name . ".\n";
   $class_chosen = FALSE;
+
   do {
-       echo "Wizard\n
+    echo "Wizard\n
             Warrior\n
             Thief\n";
-    $_SESSION['class'] = readline("Choose Your Class>>");
-      if ($_SESSION['class'] === "Wizard") {
-        echo "You are a " . $_SESSION['class'] . ".\n";
-        $class_chosen = TRUE;
+    $class_name = readline("Choose Your Class>>");
+
+    if ($class_name === "Wizard") {
+      echo "You are a " . $class_name . ".\n";
+      $class_chosen = TRUE;
     }
-      elseif ($_SESSION['class'] === "Warrior") {
-        echo "You are a " . $_SESSION['class'] . ".\n";
-        $class_chosen = TRUE;
+    elseif ($class_name === "Warrior") {
+      echo "You are a " . $class_name . ".\n";
+      $class_chosen = TRUE;
     }
-      elseif ($_SESSION['class'] === "Thief") {
-        echo "You are a " . $_SESSION['class'] . ".\n";
-        $class_chosen = TRUE;
+    elseif ($class_name === "Thief") {
+      echo "You are a " . $class_name . ".\n";
+      $class_chosen = TRUE;
     }
-      else {
-        echo "Invalid Selection\n";
-        $class = readline("Choose Your Class>>");
+    else {
+      echo "Invalid Selection\n";
     }
 
-  }while (!$class_chosen);
+  } while (!$class_chosen);
 
-
+  generate_new_character($name, $class_name);
   update_stats();
 
   write_file($_SESSION['hero']);
@@ -107,35 +119,35 @@ function update_stats() {
   display_stats();
   do {
     $stat = readline("Choose which attribute to add a point to (" . $stat_points . " remaining): \n");
-      if ($stat === 'str') {
-        $_SESSION['hero']['Stats']['str']++;
-        $stat_points--;
-        display_stats();
-      }
-      elseif ($stat === 'dex') {
-        $_SESSION['hero']['Stats']['dex']++;
-        $stat_points--;
-        display_stats();
-      }
-      elseif ($stat === 'con') {
-        $_SESSION['hero']['Stats']['con']++;
-        $stat_points--;
-        display_stats();
-      }
-      elseif ($stat === 'int') {
-        $_SESSION['hero']['Stats']['int']++;
-        $stat_points--;
-        display_stats();
-      }
-      elseif ($stat === 'wis') {
-        $_SESSION['hero']['Stats']['wis']++;
-        $stat_points--;
-        display_stats();
-      }
-      else {
-        echo "Invalid Selection\n";
-      }
-  }while ($stat_points > 0);
+    if ($stat === 'str') {
+      $_SESSION['hero']['Stats']['str']++;
+      $stat_points--;
+      display_stats();
+    }
+    elseif ($stat === 'dex') {
+      $_SESSION['hero']['Stats']['dex']++;
+      $stat_points--;
+      display_stats();
+    }
+    elseif ($stat === 'con') {
+      $_SESSION['hero']['Stats']['con']++;
+      $stat_points--;
+      display_stats();
+    }
+    elseif ($stat === 'int') {
+      $_SESSION['hero']['Stats']['int']++;
+      $stat_points--;
+      display_stats();
+    }
+    elseif ($stat === 'wis') {
+      $_SESSION['hero']['Stats']['wis']++;
+      $stat_points--;
+      display_stats();
+    }
+    else {
+      echo "Invalid Selection\n";
+    }
+  } while ($stat_points > 0);
 
   game_begin();
 }
@@ -145,7 +157,7 @@ function game_begin() {
     echo "1). Look for something to fight\n
             2.) Visit the General Store\n
             3.) View Stats and Inventory\n
-            4.) Save and Quit\n" ;
+            4.) Save and Quit\n";
 
     $option = readline("Choose an option>>");
     if ($option === "1") {
