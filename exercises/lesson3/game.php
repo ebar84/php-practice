@@ -16,7 +16,7 @@ function generate_new_character($name, $class) {
       ],
       'name' => $name,
       'class' => $class,
-      'Inventory' => [],
+      'Inventory' => [''],
       'Equipped' => ['Weapon' => '', 'Body' => ''],
       'Skills' => ['Magic' => ''],
       'filename' => '',
@@ -103,15 +103,15 @@ function create_hero() {
   generate_new_character($name, $class_name);
   update_stats();
 
-  write_file($_SESSION['hero']);
+  write_file($_SESSION['player']);
 }
 
 function display_stats() {
-  echo "Strength: " . $_SESSION['hero']['Stats']['str'] . "\n";
-  echo "Dexterity: " . $_SESSION['hero']['Stats']['dex'] . "\n";
-  echo "Constitution: " . $_SESSION['hero']['Stats']['con'] . "\n";
-  echo "Intelligence: " . $_SESSION['hero']['Stats']['int'] . "\n";
-  echo "Wisdom: " . $_SESSION['hero']['Stats']['wis'] . "\n";
+  echo "Strength: " . $_SESSION['player']['Stats']['str'] . "\n";
+  echo "Dexterity: " . $_SESSION['player']['Stats']['dex'] . "\n";
+  echo "Constitution: " . $_SESSION['player']['Stats']['con'] . "\n";
+  echo "Intelligence: " . $_SESSION['player']['Stats']['int'] . "\n";
+  echo "Wisdom: " . $_SESSION['player']['Stats']['wis'] . "\n";
 }
 
 function update_stats() {
@@ -120,27 +120,27 @@ function update_stats() {
   do {
     $stat = readline("Choose which attribute to add a point to (" . $stat_points . " remaining): \n");
     if ($stat === 'str') {
-      $_SESSION['hero']['Stats']['str']++;
+      $_SESSION['player']['Stats']['str']++;
       $stat_points--;
       display_stats();
     }
     elseif ($stat === 'dex') {
-      $_SESSION['hero']['Stats']['dex']++;
+      $_SESSION['player']['Stats']['dex']++;
       $stat_points--;
       display_stats();
     }
     elseif ($stat === 'con') {
-      $_SESSION['hero']['Stats']['con']++;
+      $_SESSION['player']['Stats']['con']++;
       $stat_points--;
       display_stats();
     }
     elseif ($stat === 'int') {
-      $_SESSION['hero']['Stats']['int']++;
+      $_SESSION['player']['Stats']['int']++;
       $stat_points--;
       display_stats();
     }
     elseif ($stat === 'wis') {
-      $_SESSION['hero']['Stats']['wis']++;
+      $_SESSION['player']['Stats']['wis']++;
       $stat_points--;
       display_stats();
     }
@@ -181,17 +181,17 @@ function game_begin() {
 }
 
 function view_stats() {
-  echo "Your name is " . $_SESSION['name'] . ".\n";
-  echo "You are a " . $_SESSION['class'] . ".\n";
-  echo "Strength: " . $_SESSION['hero']['Stats']['str'] . "\n";
-  echo "Dexterity: " . $_SESSION['hero']['Stats']['dex'] . "\n";
-  echo "Constitution: " . $_SESSION['hero']['Stats']['con'] . "\n";
-  echo "Intelligence: " . $_SESSION['hero']['Stats']['int'] . "\n";
-  echo "Wisdom: " . $_SESSION['hero']['Stats']['wis'] . "\n";
-  echo "You currently have " . $_SESSION['hero']['Inventory'] . " in your Inventory.\n";
-  echo "Your current weapon is " . $_SESSION['hero']['Equipped']['Weapon'] . ".\n";
-  echo "You are currently wearing " . $_SESSION['hero']['Equipped']['Body'] . ".\n";
-  echo "Your current Magic skill is " . $_SESSION['hero']['Skills']['Magic'] . ".\n";
+  echo "Your name is " . $_SESSION['player']['name'] . ".\n";
+  echo "You are a " . $_SESSION['player']['class'] . ".\n";
+  echo "Strength: " . $_SESSION['player']['Stats']['str'] . "\n";
+  echo "Dexterity: " . $_SESSION['player']['Stats']['dex'] . "\n";
+  echo "Constitution: " . $_SESSION['player']['Stats']['con'] . "\n";
+  echo "Intelligence: " . $_SESSION['player']['Stats']['int'] . "\n";
+  echo "Wisdom: " . $_SESSION['player']['Stats']['wis'] . "\n";
+  echo "You currently have " . $_SESSION['player']['Inventory'] . " in your Inventory.\n";
+  echo "Your current weapon is " . $_SESSION['player']['Equipped']['Weapon'] . ".\n";
+  echo "You are currently wearing " . $_SESSION['player']['Equipped']['Body'] . ".\n";
+  echo "Your current Magic skill is " . $_SESSION['player']['Skills']['Magic'] . ".\n";
 
 }
 
@@ -207,15 +207,17 @@ function open_file() {
 
 function update_file() {
   $contents = open_file();
-  $player = $_SESSION['player']['filename'];
-  foreach ($contents['players'] as $key => $content) {
-    if ($content['player'] == $player) {
-      $contents['players'][$key] = $_SESSION['player'];
-    }
-  }
+ //saves but incorrectly
+  $fileName = $_SESSION['player']['name'];
+  $_SESSION['player']['filename'] = $fileName;
+  $convert = strtolower($fileName);
+  $path = str_replace($convert, ' ', '_');
 
   $jsonData = json_encode($contents);
-  file_put_contents('players.json', $jsonData);
+  file_put_contents($path, $jsonData);
+
+  $playerData = json_encode($_SESSION['player']);
+  file_put_contents('players.json', $playerData);
 }
 
 function login() {
@@ -228,7 +230,7 @@ function login() {
     foreach ($contents['players'] as $content) {
       if ($content['player'] == $username) {
         $logged_in = TRUE;
-        $_SESSION['player'] = $content;
+        $_SESSION['player']['filename'] = $content;
         echo "You have entered the Realm of the Blue Dragon";
         break;
       }
