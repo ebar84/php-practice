@@ -27,7 +27,7 @@ function generate_new_character($name, $class) {
       'Inventory' => [''],
       'Equipped' => ['Weapon' => '', 'Body' => ''],
       'Skills' => ['Magic' => ''],
-      'filename' => str_replace(' ', '_', $name),
+      'filename' => str_replace(' ', '_', strtolower($name)),
     ];
 }
 
@@ -225,9 +225,9 @@ function save_player_data() {
    * The filename should be saving to the players directory.
    * See if you can figure out whats wrong here
    */
-  $contents = open_file($_SESSION['player']['filename']);
-  $jsonData = json_encode($_SESSION['player']);
-  save_file($contents, $jsonData);
+  $contents = open_file('players.json');
+  $jsonData = json_encode($_SESSION['player']['filename']);
+  save_file('players.json', $jsonData);
 
   /**
    * @TODO
@@ -239,6 +239,11 @@ function save_player_data() {
    * Save the file in players.json
    * save_file($filename, $contents)
    */
+
+    $contents = open_file('players.json');
+    $newJson = json_encode($contents);
+    //$contents[] = $newJson;
+    save_file('players.json', $newJson);
 }
 
 function open_file($filename) {
