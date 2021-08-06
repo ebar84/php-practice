@@ -5,6 +5,14 @@ function session_begin() {
 }
 
 function generate_new_character($name, $class) {
+
+  /**
+   * @TODO
+   *
+   * Need to lowercase the namer here for filename. You can run functions
+   * inside functions like
+   * strtolower(str_replace...);
+   */
   $_SESSION['player'] =
     [
       'Stats' => [
@@ -40,11 +48,6 @@ function main() {
   \______(_______;;; __;;;\n";
 
   menu();
-}
-
-function write_file($content) {
-  $encode = json_encode($content);
-  file_put_contents('players.json', $encode);
 }
 
 function menu() {
@@ -102,47 +105,34 @@ function create_hero() {
 
   generate_new_character($name, $class_name);
   update_stats();
-
-  write_file($_SESSION['player']);
-}
-
-function display_stats() {
-  echo "Strength: " . $_SESSION['player']['Stats']['str'] . "\n";
-  echo "Dexterity: " . $_SESSION['player']['Stats']['dex'] . "\n";
-  echo "Constitution: " . $_SESSION['player']['Stats']['con'] . "\n";
-  echo "Intelligence: " . $_SESSION['player']['Stats']['int'] . "\n";
-  echo "Wisdom: " . $_SESSION['player']['Stats']['wis'] . "\n";
 }
 
 function update_stats() {
   $stat_points = 10;
-  display_stats();
+
   do {
     $stat = readline("Choose which attribute to add a point to (" . $stat_points . " remaining): \n");
+    display_stats();
+
     if ($stat === 'str') {
       $_SESSION['player']['Stats']['str']++;
       $stat_points--;
-      display_stats();
     }
     elseif ($stat === 'dex') {
       $_SESSION['player']['Stats']['dex']++;
       $stat_points--;
-      display_stats();
     }
     elseif ($stat === 'con') {
       $_SESSION['player']['Stats']['con']++;
       $stat_points--;
-      display_stats();
     }
     elseif ($stat === 'int') {
       $_SESSION['player']['Stats']['int']++;
       $stat_points--;
-      display_stats();
     }
     elseif ($stat === 'wis') {
       $_SESSION['player']['Stats']['wis']++;
       $stat_points--;
-      display_stats();
     }
     else {
       echo "Invalid Selection\n";
@@ -183,51 +173,40 @@ function game_begin() {
 function view_stats() {
   echo "Your name is " . $_SESSION['player']['name'] . ".\n";
   echo "You are a " . $_SESSION['player']['class'] . ".\n";
+  display_stats();
+  echo "You currently have " . $_SESSION['player']['Inventory'] . " in your Inventory.\n";
+  echo "Your current weapon is " . $_SESSION['player']['Equipped']['Weapon'] . ".\n";
+  echo "You are currently wearing " . $_SESSION['player']['Equipped']['Body'] . ".\n";
+  echo "Your current Magic skill is " . $_SESSION['player']['Skills']['Magic'] . ".\n";
+}
+
+function display_stats() {
   echo "Strength: " . $_SESSION['player']['Stats']['str'] . "\n";
   echo "Dexterity: " . $_SESSION['player']['Stats']['dex'] . "\n";
   echo "Constitution: " . $_SESSION['player']['Stats']['con'] . "\n";
   echo "Intelligence: " . $_SESSION['player']['Stats']['int'] . "\n";
   echo "Wisdom: " . $_SESSION['player']['Stats']['wis'] . "\n";
-  echo "You currently have " . $_SESSION['player']['Inventory'] . " in your Inventory.\n";
-  echo "Your current weapon is " . $_SESSION['player']['Equipped']['Weapon'] . ".\n";
-  echo "You are currently wearing " . $_SESSION['player']['Equipped']['Body'] . ".\n";
-  echo "Your current Magic skill is " . $_SESSION['player']['Skills']['Magic'] . ".\n";
-
 }
 
 function quit() {
-  update_file();
-}
-
-function open_file() {
-  $players = file_get_contents('players.json');
-  $content = json_decode($players, TRUE);
-  return $content;
-}
-
-function update_file() {
-  $contents = open_file();
-
-  $fileName = $_SESSION['player']['filename'];
-
-  $jsonData = json_encode($_SESSION['player']);
-  file_put_contents($fileName, $jsonData);
-
-  $playerData = json_encode($fileName);
-  file_put_contents('players.json', $playerData);
+  save_player_data();
 }
 
 function login() {
   $logged_in = FALSE;
-  $fileName = $_SESSION['player']['filename'];
 
   do {
     $username = readline("Username>>");
-    $contents = open_file();
+    $contents = open_file('players.json');
 
     foreach ($contents['players'] as $content) {
       if ($content['player'] == $username) {
         $logged_in = TRUE;
+        /**
+         * @TODO
+         * Filename cant be equal to content because this row
+         * is going to have the username and the file name
+         */
         $_SESSION['player']['filename'] = $content;
         echo "You have entered the Realm of the Blue Dragon";
         break;
@@ -238,4 +217,35 @@ function login() {
     }
 
   } while (!$logged_in);
+}
+
+function save_player_data() {
+  /**
+   * @TODO
+   * The filename should be saving to the players directory.
+   * See if you can figure out whats wrong here
+   */
+  $contents = open_file($_SESSION['player']['filename']);
+  $jsonData = json_encode($_SESSION['player']);
+  save_file($contents, $jsonData);
+
+  /**
+   * @TODO
+   * Open players.json and json_encode it
+   * Add the player information to the array
+   * $contents = open_file('players.json');
+   * $contents[] = ???
+   * How do you add another row to an array here.
+   * Save the file in players.json
+   * save_file($filename, $contents)
+   */
+}
+
+function open_file($filename) {
+  $players = file_get_contents($filename);
+  return json_decode($players, TRUE);
+}
+
+function save_file($filename, $contents) {
+  file_put_contents($filename, $contents);
 }
