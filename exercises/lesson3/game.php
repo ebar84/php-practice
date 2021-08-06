@@ -19,7 +19,7 @@ function generate_new_character($name, $class) {
       'Inventory' => [''],
       'Equipped' => ['Weapon' => '', 'Body' => ''],
       'Skills' => ['Magic' => ''],
-      'filename' => '',
+      'filename' => str_replace(' ', '_', $name),
     ];
 }
 
@@ -200,28 +200,26 @@ function quit() {
 }
 
 function open_file() {
-  $accounts = file_get_contents('players.json');
-  $content = json_decode($accounts, TRUE);
+  $players = file_get_contents('players.json');
+  $content = json_decode($players, TRUE);
   return $content;
 }
 
 function update_file() {
   $contents = open_file();
- //saves but incorrectly
-  $fileName = $_SESSION['player']['name'];
-  $_SESSION['player']['filename'] = $fileName;
-  $convert = strtolower($fileName);
-  $path = str_replace($convert, ' ', '_');
 
-  $jsonData = json_encode($contents);
-  file_put_contents($path, $jsonData);
+  $fileName = $_SESSION['player']['filename'];
 
-  $playerData = json_encode($_SESSION['player']);
+  $jsonData = json_encode($_SESSION['player']);
+  file_put_contents($fileName, $jsonData);
+
+  $playerData = json_encode($fileName);
   file_put_contents('players.json', $playerData);
 }
 
 function login() {
   $logged_in = FALSE;
+  $fileName = $_SESSION['player']['filename'];
 
   do {
     $username = readline("Username>>");
