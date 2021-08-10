@@ -5,14 +5,6 @@ function session_begin() {
 }
 
 function generate_new_character($name, $class) {
-
-  /**
-   * @TODO
-   *
-   * Need to lowercase the namer here for filename. You can run functions
-   * inside functions like
-   * strtolower(str_replace...);
-   */
   $_SESSION['player'] =
     [
       'Stats' => [
@@ -27,7 +19,7 @@ function generate_new_character($name, $class) {
       'Inventory' => [''],
       'Equipped' => ['Weapon' => '', 'Body' => ''],
       'Skills' => ['Magic' => ''],
-      'filename' => str_replace(' ', '_', strtolower($name)),
+      'filename' => str_replace(' ', '_', strtolower($name)) . '.json',
     ];
 }
 
@@ -111,8 +103,8 @@ function update_stats() {
   $stat_points = 10;
 
   do {
-    $stat = readline("Choose which attribute to add a point to (" . $stat_points . " remaining): \n");
     display_stats();
+    $stat = readline("Choose which attribute to add a point to (" . $stat_points . " remaining): \n");
 
     if ($stat === 'str') {
       $_SESSION['player']['Stats']['str']++;
@@ -193,57 +185,40 @@ function quit() {
 }
 
 function login() {
+  $files = scandir('players');
+  $json_files = [];
   $logged_in = FALSE;
 
-  do {
-    $username = readline("Username>>");
-    $contents = open_file('players.json');
 
-    foreach ($contents['players'] as $content) {
-      if ($content['player'] == $username) {
+  foreach ($files as $file) {
+    if (strstr($file, '.json')) {
+      $file_name_stripped = str_replace('.json', '', $file);
+      $character = str_replace('_', ' ', strtoupper($file_name_stripped));
+      $json_files[$character] = $file;
+    }
+  }
+
+  foreach ($json_files as $key => $json_file) {
+    echo $key . "\n";
+  }
+
+  do {
+    $option = strtoupper(readline("Enter a Username >>"));
+    foreach ($json_files as $key => $json_file){
+      if ($key == $option) {
         $logged_in = TRUE;
-        /**
-         * @TODO
-         * Filename cant be equal to content because this row
-         * is going to have the username and the file name
-         */
-        $_SESSION['player']['filename'] = $content;
-        echo "You have entered the Realm of the Blue Dragon";
-        break;
-      }
-      else {
-        echo "Unable to Login";
+        open_file(__DIR__ . '/players/' . $json_file);
+        echo "Logged in \n";
+        var_dump(open_file(__DIR__ . '/players/' . $json_file));
       }
     }
 
-  } while (!$logged_in);
+  }while(!$logged_in);
 }
 
 function save_player_data() {
-  /**
-   * @TODO
-   * The filename should be saving to the players directory.
-   * See if you can figure out whats wrong here
-   */
-  $contents = open_file('players.json');
-  $jsonData = json_encode($_SESSION['player']['filename']);
-  save_file('players.json', $jsonData);
-
-  /**
-   * @TODO
-   * Open players.json and json_encode it
-   * Add the player information to the array
-   * $contents = open_file('players.json');
-   * $contents[] = ???
-   * How do you add another row to an array here.
-   * Save the file in players.json
-   * save_file($filename, $contents)
-   */
-
-    $contents = open_file('players.json');
-    $newJson = json_encode($contents);
-    //$contents[] = $newJson;
-    save_file('players.json', $newJson);
+  $json_encode = json_encode($_SESSION['player']);
+  save_file(__DIR__ . '/players/' . $_SESSION['player']['filename'] , $json_encode);
 }
 
 function open_file($filename) {
