@@ -16,6 +16,9 @@ function generate_new_character($name, $class) {
       ],
       'name' => $name,
       'class' => $class,
+      'level' => 0,
+      'exp' => 0,
+      'gold' => 0,
       'Inventory' => [''],
       'Equipped' => ['Weapon' => '', 'Body' => ''],
       'Skills' => ['Magic' => ''],
@@ -166,6 +169,9 @@ function view_stats() {
   echo "Your name is " . $_SESSION['player']['name'] . ".\n";
   echo "You are a " . $_SESSION['player']['class'] . ".\n";
   display_stats();
+  echo "You have " . $_SESSION['player']['gold'] . " gold\n";
+  echo "Your level is " . $_SESSION['player']['level'] . ".\n";
+  echo "Your have " . $_SESSION['player']['exp'] . " experience points.\n";
   echo "You currently have " . $_SESSION['player']['Inventory'] . " in your Inventory.\n";
   echo "Your current weapon is " . $_SESSION['player']['Equipped']['Weapon'] . ".\n";
   echo "You are currently wearing " . $_SESSION['player']['Equipped']['Body'] . ".\n";
